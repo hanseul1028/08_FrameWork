@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+ <configuration>
+ 
+	<!-- 
+		environments, dataSource => DB 연결 정보 
+		
+		=> 객체를 생성해야함 
+		
+		이 타입의 객체를 스프링이 생성하고 관리하게 해야함
+		=> Bean으로 등록을 해야 함 
+		1. @Bean
+		2. @Component
+		3. XML 기반 Bean 설정 (beans.xml)
+	 -->
+	
+ 
+ </configuration>
+  
