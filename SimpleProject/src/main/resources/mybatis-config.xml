@@ -4,6 +4,10 @@
   "https://mybatis.org/dtd/mybatis-3-config.dtd">
  <configuration>
  
+ 	<typeAliases>
+ 		<typeAlias type="com.kh.spring.member.model.dto.MemberDTO" alias="memberDTO"/>
+ 	</typeAliases>
+ 
 	<!-- 
 		environments, dataSource => DB 연결 정보 
 		
@@ -15,6 +19,10 @@
 		2. @Component
 		3. XML 기반 Bean 설정 (beans.xml)
 	 -->
+	 
+	 <mappers>
+	 	<mapper resource="/mapper/member-mapper.xml"></mapper>
+	 </mappers>
 	
  
  </configuration>

@@ -10,7 +10,7 @@ public interface MemberService {
 	// 회원가입
 	// 좋은 방법 : 가입된 회원의 정보를 반환해준다 (Hibernate)
 	// 일반 방법 : 정수값을 반환하거나 값을 반환하지 않는다 (MyBatis) 
-	MemberDTO signUp(MemberDTO member);
+	void signUp(MemberDTO member);
 	
 	// 회원정보 수정
 	// 전제 조건 : 로그인 되어 있을 것 

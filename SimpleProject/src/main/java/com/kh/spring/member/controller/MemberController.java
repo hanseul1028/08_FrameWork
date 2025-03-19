@@ -1,19 +1,54 @@
 package com.kh.spring.member.controller;
 
+import java.io.UnsupportedEncodingException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 // import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 // import org.springframework.web.bind.annotation.RequestMapping;
 // import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.spring.member.model.dto.MemberDTO;
+import com.kh.spring.member.model.service.MemberService;
+import com.kh.spring.member.model.service.MemberServiceimpl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor // 의존성 주입 생성자를 생성해주는 애노테이션 
 public class MemberController {
+	
+	// 방법 1. 필드 주입 
+	@Autowired
+	private final MemberService memberService;
+	
+	// 방법 2. 세터 주입 (Setter Injection) 
+	/*
+	@Autowired
+	public void setMemberservice(MemberService memberService) {
+		this.memberService = memberService;
+	}
+	*/
+	
+	// 방법 3. 생성자 주입 (Constructor Injection)
+	// 가장 권장 
+	/*
+	@Autowired
+	public MemberController(MemberService memberService) {
+		this.memberService = memberService;
+	}
+	*/
 	
 	// 로그인 구현하려고 왔음
 	// 서블릿 말고 컨트롤러 하위의 메소드
@@ -67,15 +102,152 @@ public class MemberController {
 	 * 내부적으로 setter 메서드를 찾아서 요청 시 전달값을 해당 필드에 대입해줌 
 	 * (Setter Injection)
 	 */
+	
+	/*
 	@PostMapping("login")
-	public String login(MemberDTO member) {
+	public String login(MemberDTO member,
+						HttpSession session,
+						Model model) {
 		
-		log.info("header에서 변수명 맞춰주면 됨 {}", member);
+		// log.info("전달되는 키값과 객체의 필드명이 동일할 것 / header에서 변수명 맞춰주면 됨 {}", member);
 		
+		* 데이터 가공   => pass
+		 * 요청처리     => service
+		 * 응답화면 지정 
+		 *
+		
+		// new MemberServiceImpl().login(member);
+		
+		MemberDTO loginMember = memberService.login(member);
+		
+		//
+		if(loginMember != null) {
+			log.info("로그인 성공 ");
+			
+		}else {
+			log.info("로그인 실패 ");
+		}
+		//
+		
+		if(loginMember != null) { // 성공했을 때 
+			// sessionScope에 로그인 정보를 담아줌 
+			session.setAttribute("loginMember", loginMember);
+			// main_page로 보내야 함 
+			// /WEB-INF/views
+			// .jsp
+			// => 포워딩
+			// sendRedirect
+			
+			// localhost/spring/
+			
+			return "redirect:/";
+			
+		}else { // 실패했을 때 
+			// error_page
+			// requestScope에 에러 문구를 담아서 포워딩 
+			// Spring에서는 Model객체를 이용해서 RequestScope에 값을 담음 
+			model.addAttribute("message","로그인 실패");
+			
+			// forwarding
+			// /WEB-INF/views/
+			// include/error_page
+			// .jsp
+			return "include/error_page";
+			// 논리적인 경로를 가지고 물리적인 경로를 찾아감 
+		}
+}
+		*/
+		
+		// return "main_page";
+
+	// 두 번째 방법 : 반환타입 ModelAndView로 돌아가기
+	@PostMapping("login")
+	public ModelAndView login(MemberDTO member, 
+										HttpSession session,
+										ModelAndView mv) {
+		
+		MemberDTO loginMember = memberService.login(member);
+		
+		if(loginMember != null) {
+			session.setAttribute("loginMember", loginMember);
+			mv.setViewName("redirect:/");
+		}else {
+			mv.addObject("message","로그인 실패 ")
+			  .setViewName("include/error_page");
+		}
+		return mv;
+	}
+	
+	@GetMapping("logout")
+	public ModelAndView logout(HttpSession session,
+								ModelAndView mv) {
+		
+		session.removeAttribute("loginMember");
+				mv.setViewName("redirect:/");
+		return mv;
+	}
+	
+	@GetMapping("signup-form")
+	public String signupForm() {
+		//  /WEB-INF/views/member/signup-form .jsp
+		return "member/signup-form";
+		
+	}
+	
+	/*
+	 * @Param member id
+	 * @return 성공 시 main 실패하면 err담아서 error_page
+	 */
+	@PostMapping("signup")
+	public String join(MemberDTO member, HttpServletRequest request) {
+		
+		/*
+		try {
+			request.setCharacterEncoding("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		*/
+		
+		// log.info("멤버 필드 찍어보기 : {}", member);
+		memberService.signUp(member);
 		return "main_page";
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
