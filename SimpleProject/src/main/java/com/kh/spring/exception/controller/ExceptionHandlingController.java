@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kh.spring.exception.AuthenticationException;
+import com.kh.spring.exception.DuplicateIdException;
 import com.kh.spring.exception.InvalidParameterException;
 import com.kh.spring.exception.MemberNotFoundException;
 import com.kh.spring.exception.PasswordNotMatchException;
@@ -19,6 +21,16 @@ public class ExceptionHandlingController {
 		mv.addObject("message", errorMsg).setViewName("include/error_page");
 		log.info("발생예외 : {} ", errorMsg, e);
 		return mv;
+	}
+	
+	@ExceptionHandler(AuthenticationException.class)
+	protected ModelAndView AuthenticationError(AuthenticationException e) {
+		return createErrorResponse(e.getMessage(), e);
+	}
+	
+	@ExceptionHandler(DuplicateIdException.class)
+	protected ModelAndView duplicateIdException(DuplicateIdException e) {
+		return createErrorResponse(e.getMessage(), e);
 	}
 	
 	@ExceptionHandler(InvalidParameterException.class)
