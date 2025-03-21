@@ -54,7 +54,7 @@
                     </tr>
                     <tr>
                         <th><label for="writer">작성자</label></th>
-                        <td><input type="text" id="writer" class="form-control" value="${ sessionScope.loginMember.memberId }" name="" readonly></td>
+                        <td><input type="text" id="writer" class="form-control" value="${ sessionScope.loginMember.memberId }" name="boardWriter" readonly></td>
                     </tr>
                     <tr>
                         <th><label for="upfile">첨부파일</label></th>
