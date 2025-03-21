@@ -19,7 +19,7 @@ public class BoardDTO {
 	private int boardNo;
 	private String boardTitle;
 	private String boardContent;
-	private String boardWirter;
+	private String boardWriter;
 	private int count;
 	private String createDate;
 	private String changeName;
