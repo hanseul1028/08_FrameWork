@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.spring.board.model.dto.BoardDTO;
 import com.kh.spring.board.model.mapper.BoardMapper;
 import com.kh.spring.member.model.dto.MemberDTO;
+import com.kh.spring.reply.model.dto.ReplyDTO;
 import com.kh.spring.util.model.dto.PageInfo;
 import com.kh.spring.util.template.Pagination;
 
@@ -115,12 +116,15 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public BoardDTO selectBoard(int boardNo) {
 		
-		BoardDTO board = boardMapper.selectBoard(boardNo);
+		// BoardDTO board = boardMapper.selectBoard(boardNo);
 		
+		// List<ReplyDTO> replyList = boardMapper.selectReply(boardNo);
+		// board.setReplyList(replyList);
+		
+		BoardDTO board = boardMapper.selectBoardAndReply(boardNo);
 		if(board == null) {
 			throw new InvalidParameterException("존재하지 않는 게시글입니다 ");
 		}
-		
 		return board;
 	}
 

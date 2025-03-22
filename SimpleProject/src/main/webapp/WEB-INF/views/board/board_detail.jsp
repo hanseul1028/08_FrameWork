@@ -96,25 +96,27 @@
                         <th style="vertical-align:middle"><button class="btn btn-secondary">등록하기</button></th> 
                     </tr>
                     <tr>
-                        <td colspan="3">댓글(<span id="rcount">3</span>)</td>
+                        <td colspan="3">댓글(<span id="rcount">${ board.replyList.size() }</span>)</td>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th>user02</th>
-                        <td>ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ</td>
-                        <td>2025-03-12</td>
-                    </tr>
-                    <tr>
-                        <th>user01</th>
-                        <td>재밌어요</td>
-                        <td>2025-03-11</td>
-                    </tr>
-                    <tr>
-                        <th>admin</th>
-                        <td>댓글입니다!!</td>
-                        <td>2025-03-10</td>
-                    </tr>
+                
+                	<c:choose>
+                	<c:when test="${not empty board.replyList }">
+                		<c:forEach items="${board.replyList }" var = "reply">
+		                    <tr>
+		                      <th>${reply.replyWriter }</th>
+		                      <td>${reply.replyContent }</td>
+		                      <td>${reply.createDate }</td>
+		                    </tr>
+                		</c:forEach>
+                    </c:when>
+                    	<c:otherwise>
+		                    <tr>
+		                    	<td colspan="3"> 댓글이 존재하지 않습니다 </td>
+		                    </tr>
+                    	</c:otherwise>
+                    </c:choose>
                 </tbody>
             </table>
         </div>

@@ -48,6 +48,7 @@
 	
 	
 	<select id ="selectBoard"
+			parameterType="_int"
 			resultType="com.kh.spring.board.model.dto.BoardDTO">
 		<include refid="boardColumn"/>
 			, BOARD_CONTENT boardContent
@@ -57,6 +58,71 @@
 			STATUS = 'Y'
 		AND
 			BOARD_NO = #{boardNo}
+			
+	</select>
+	
+	<select id ="selectReply"
+			parameterType="_int"
+			resultType="com.kh.spring.board.model.dto.BoardDTO">
+		
+		
+		SELECT
+			REPLY_NO replyNo
+		  , REPLY_WRITER replyWriter
+		  , REPLY_CONTENT replyContent
+		  , CREATE_DATE createDate
+		  , REF_BOARD_NO  refBoardNo
+		 FROM
+		 	TB_REPLY
+		 WHERE
+		 	REF_BOARD_NO = #{boardNo}
+		 ORDER BY
+		 	replyNo DESC
+		
+	</select>
+	
+	<resultMap id="boardResultSet"
+				type="com.kh.spring.board.model.dto.BoardDTO">
+		<id     column="boardNo"          property="boardNo"/>
+		<result column ="boardTitle"      property="boardTitle"/>	
+		<result column ="boardContent"    property="boardContent"/>	
+		<result column ="boardWriter"     property="boardWriter"/>	
+		<result column ="boardCreateDate" property="createDate"/>	
+		<result column ="changeName"      property="changeName"/>	
+		<collection property="replyList"  ofType="com.kh.spring.reply.model.dto.ReplyDTO">
+			<id column="replyNo" property="replyNo"/>
+			<result column="replyWriter" property="replyWriter"/>
+			<result column="replyContent" property="replyContent"/>
+			<result column="refBoardno" property="refBoardno"/>
+			<result column="replyCreateDate" property="replyCreateDate"/>
+		
+		</collection>
+	</resultMap>
+	
+	
+	<select id ="selectBoardAndReply"
+			parameterType="_int"
+			resultMap = "boardResultSet">
+				
+				SELECT
+				  BOARD_NO boardNo
+				, BOARD_TITLE boardTitle
+				, BOARD_CONTENT boardContent
+				, BOARD_WRITER boardWriter
+				, TB_SPRING_BOARD.CREATE_DATE  boardcreateDate
+				, CHANGE_NAME changeName
+				, REPLY_NO replyNo
+				, REPLY_WRITER replyWriter
+				, REPLY_CONTENT replyContent
+				, REF_BOARD_NO 	refBoardNo
+				, TB_REPLY.CREATE_DATE replycreateDate
+				FROM
+					TB_SPRING_BOARD
+				LEFT
+				JOIN
+					TB_REPLY ON (BOARD_NO = REF_BOARD_NO)
+				WHERE
+					BOARD_NO = #{boardNo}
 			
 	</select>
 
